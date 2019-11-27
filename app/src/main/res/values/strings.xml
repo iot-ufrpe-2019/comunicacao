@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">WaterMeasureIF</string>
+    <string name="text_temp_title">Temperatura</string>
+    <string name="text_title_ph">PH</string>
+</resources>
