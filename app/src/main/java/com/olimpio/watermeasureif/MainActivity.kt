@@ -9,6 +9,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.measure_item.*
 import org.eclipse.paho.android.service.MqttAndroidClient
 import org.eclipse.paho.client.mqttv3.*
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
 
@@ -19,9 +22,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val adapter = MeasureListAdapter(measures(), this)
+
         val recycleListView = rv_measures as RecyclerView
         recycleListView.layoutManager = LinearLayoutManager(this)
-        recycleListView.adapter = MeasureListAdapter(measures(), this)
+        recycleListView.adapter = adapter
 
         val clientId: String = MqttClient.generateClientId()
         client = MqttAndroidClient(applicationContext, Constants.MQQTHOST, clientId)
@@ -57,20 +62,31 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun messageArrived(topic: String?, message: MqttMessage?) {
-                tv_item_temp.text = message?.payload?.decodeToString() //test TODO: upgrade every list item
+                val temp = message?.payload?.decodeToString()?.subSequence(0,3) as String
+                val ph = message?.payload?.decodeToString()?.subSequence(3,5) as String
+                adapter.updateList(Measure(getTimeStamp(), temp, ph))
             }
         })
     }
 
-    private fun measures(): List<Measure> {
-        return listOf(
-            Measure("20C", "2"),
-            Measure("20C", "2"),
-            Measure("20C", "2"),
-            Measure("20C", "2"),
-            Measure("20C", "2"),
-            Measure("20C", "2"),
-            Measure("20C", "2")
+    private fun getTimeStamp() : String {
+        val simpleDateformat = SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault())
+        return simpleDateformat.format(Date())
+    }
+
+    // for tests
+    private fun measures(): ArrayList<Measure> {
+        return arrayListOf(
+            Measure("02/04/94 10:10", "20C", "2"),
+            Measure("02/04/94 10:10", "20C", "2"),
+            Measure("02/04/94 10:10", "20C", "2"),
+            Measure("02/04/94 10:10", "20C", "2"),
+            Measure("02/04/94 10:10", "20C", "2"),
+            Measure("02/04/94 10:10", "20C", "2"),
+            Measure("02/04/94 10:10", "20C", "2"),
+            Measure("02/04/94 10:10", "20C", "2"),
+            Measure("02/04/94 10:10", "20C", "2"),
+            Measure("02/04/94 10:10", "20C", "2")
         )
     }
 
@@ -93,5 +109,9 @@ class MainActivity : AppCompatActivity() {
 
         }
     }
+
+    //TODO: persist data!!!
+    //notifications!
+    //app run in background?
 }
 

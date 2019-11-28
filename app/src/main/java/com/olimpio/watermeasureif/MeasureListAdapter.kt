@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import kotlinx.android.synthetic.main.measure_item.view.*
 
-class MeasureListAdapter(private val mMeasures: List<Measure>,
+class MeasureListAdapter(private var mMeasures: ArrayList<Measure>,
                          private val mContext: Context) : Adapter<MeasureListAdapter.ViewHolder>() {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -23,12 +23,24 @@ class MeasureListAdapter(private val mMeasures: List<Measure>,
 
     override fun getItemCount() = mMeasures.size
 
+    fun updateList(measure: Measure) {
+        insertItem(measure)
+    }
+
+    private fun insertItem(measure: Measure) {
+        mMeasures.add(measure)
+        notifyItemInserted(itemCount)
+
+    }
+
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bindView(measure: Measure) {
 
+            val timestamp = itemView.tv_item_timestamp
             val temp = itemView.tv_item_temp
             val ph = itemView.tv_item_ph
 
+            timestamp.text = measure.timestamp
             temp.text = measure.temp
             ph.text = measure.ph
         }

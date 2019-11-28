@@ -2,4 +2,6 @@
     <string name="app_name">WaterMeasureIF</string>
     <string name="text_temp_title">Temperatura</string>
     <string name="text_title_ph">PH</string>
+    <string name="text_item_itemstamp" />
+    <string name="text_title_timestamp">Data/Hora</string>
 </resources>
